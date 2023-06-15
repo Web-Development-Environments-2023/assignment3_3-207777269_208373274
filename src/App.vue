@@ -10,7 +10,7 @@
           <b-navbar-nav>
             <router-link :to="{ name: 'main' }" class="nav-link">Home</router-link>
             <router-link :to="{ name: 'search' }" class="nav-link">Search</router-link>
-            <b-nav-item >About</b-nav-item>
+            <router-link :to="{ name: 'about' }" class="nav-link">About</router-link>
           </b-navbar-nav>
 
           <!-- Right aligned nav items -->
