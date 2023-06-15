@@ -6,10 +6,13 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
+    "@popperjs/core": "^2.11.8",
     "axios": "^0.19.2",
-    "bootstrap": "^4.5.0",
+    "bootstrap": "^4.6.1",
+    "bootstrap-icons": "^1.10.5",
     "bootstrap-vue": "^2.15.0",
     "core-js": "^3.6.5",
+    "popper.js": "^1.16.1",
     "sass": "^1.50.0",
     "vue": "^2.6.11",
     "vue-axios": "^2.1.5",

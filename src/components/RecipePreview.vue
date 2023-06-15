@@ -1,21 +1,65 @@
 <template>
-  <router-link
+  <div>
+    <router-link
     :to="{ name: 'recipe', params: { recipeId: recipe.id } }"
     class="recipe-preview"
   >
-    <div class="recipe-body">
-      <img v-if="image_load" :src="recipe.image" class="recipe-image" />
-    </div>
-    <div class="recipe-footer">
-      <div :title="recipe.title" class="recipe-title">
-        {{ recipe.title }}
-      </div>
-      <ul class="recipe-overview">
-        <li>{{ recipe.readyInMinutes }} minutes</li>
-        <li>{{ recipe.aggregateLikes }} likes</li>
-      </ul>
-    </div>
+    <b-card
+      :title="recipe.title"
+      :img-src="recipe.image"
+      img-alt="Image"
+      img-top
+      tag="article"
+      style="max-width: 20rem;"
+      class="mb-2 clickable-card"
+    >
+      <b-card-text>
+        Some quick example text to build on the card title and make up the bulk of the card's content.
+      </b-card-text>
+
+      <b-card-text>
+        <b-row>
+          <b-col>
+            <b-icon icon="clock-history" aria-hidden="true"></b-icon>
+            <p>
+              {{ recipe.ready_in_minutes }} minutes
+            </p>
+          </b-col>
+          <b-col>
+            <b-icon icon="hand-thumbs-up" aria-hidden="true"></b-icon>
+            <p> {{ recipe.aggregate_likes }} likes</p>
+          </b-col>
+        </b-row>
+      </b-card-text>
+
+      <b-container class="bv-example-row">
+      <b-row>
+        <b-col>
+          <b-button v-if="!is_favorite !== undefined" @click="addToFavorites($event)" class="transparent-button" variant="outline-dark">
+            <b-icon v-if="!recipe.is_favorite" icon="heart" aria-hidden="true"></b-icon>
+            <b-icon v-else icon="heart-fill" aria-hidden="true"></b-icon>
+          </b-button>
+        </b-col>
+        <b-col v-if="!recipe.is_seen">
+          <b-icon  icon="eye-fill" aria-hidden="true"></b-icon>
+        </b-col>
+        <b-col v-if="!recipe.vegan">
+          <img :src="require('@/assets/icons/vegan-icon.svg')" role="img" alt="icon" class="icon">
+        </b-col>
+        <b-col v-if="recipe.vegetarian && !recipe.vegan">
+          <img :src="require('@/assets/icons/vegetarian-icon.svg')" role="img" alt="icon" class="icon">
+        </b-col>
+        <b-col v-if="!recipe.gluten_free">
+          <img :src="require('@/assets/icons/gluten.png')" role="img" alt="icon" class="icon">
+        </b-col>
+      </b-row>
+
+    </b-container>
+
+
+    </b-card>
   </router-link>
+</div>
 </template>
 
 <script>
@@ -27,7 +71,7 @@ export default {
   },
   data() {
     return {
-      image_load: false
+      image_load: false,
     };
   },
   props: {
@@ -35,30 +79,23 @@ export default {
       type: Object,
       required: true
     }
-
-    // id: {
-    //   type: Number,
-    //   required: true
-    // },
-    // title: {
-    //   type: String,
-    //   required: true
-    // },
-    // readyInMinutes: {
-    //   type: Number,
-    //   required: true
-    // },
-    // image: {
-    //   type: String,
-    //   required: true
-    // },
-    // aggregateLikes: {
-    //   type: Number,
-    //   required: false,
-    //   default() {
-    //     return undefined;
-    //   }
-    // }
+  },
+  methods: {
+    async addToFavorites(event) {
+      const response = axios.post(this.$root.store.server_domain + '/users/favorite',
+       {recipe_id: recipe.id})
+        .then(response => {
+          // Handle the response if needed
+          console.log(response);
+        })
+        .catch(error => {
+          // Handle the error if needed
+          console.error(error);
+        });
+    },
+    navigateToRecipe(){
+      this.$router.push({ name: 'recipe', params: { recipeId: this.recipe.id } });
+    }
   }
 };
 </script>
@@ -137,5 +174,27 @@ export default {
   width: 90px;
   display: table-cell;
   text-align: center;
+}
+
+.icon {
+  width: 30px; /* Adjust the width as needed */
+  height: 30px; /* Adjust the height as needed */
+}
+
+.transparent-button {
+  background-color: transparent;
+  border-color: transparent;
+  padding: 0;
+  color: black;
+}
+
+.transparent-button:hover {
+  background-color: transparent;
+  border-color: transparent;
+  padding: 0;
+  color: black;
+}
+.clickable-card {
+  cursor: pointer;
 }
 </style>

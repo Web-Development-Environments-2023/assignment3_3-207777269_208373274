@@ -1,20 +1,52 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link :to="{ name: 'main' }">Vue Recipes</router-link>|
-      <router-link :to="{ name: 'search' }">Search</router-link>|
-      {{ !$root.store.username }}
-      <span v-if="!$root.store.username">
-        Guest:
-        <router-link :to="{ name: 'register' }">Register</router-link>|
-        <router-link :to="{ name: 'login' }">Login</router-link>|
-      </span>
-      <span v-else>
-        {{ $root.store.username }}: <button @click="Logout">Logout</button>|
-      </span>
+    <div>
+      <b-navbar toggleable="lg" type="dark" variant="dark">
+        <b-navbar-brand>RecipesLogo</b-navbar-brand>
+
+        <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+
+        <b-collapse id="nav-collapse" is-nav>
+          <b-navbar-nav>
+            <router-link :to="{ name: 'main' }" class="nav-link">Home</router-link>
+            <router-link :to="{ name: 'search' }" class="nav-link">Search</router-link>
+            <b-nav-item >About</b-nav-item>
+          </b-navbar-nav>
+
+          <!-- Right aligned nav items -->
+          <b-navbar-nav class="ml-auto" v-if="!$root.store.username">
+              
+              <b-nav-item-dropdown right>
+                <!-- Using 'button-content' slot -->
+                <template #button-content>
+                  Guest
+                </template>
+                <b-dropdown-item :to="{ name: 'register' }">Register
+                </b-dropdown-item>
+                <b-dropdown-item :to="{ name: 'login' }">Login
+                </b-dropdown-item>
+              </b-nav-item-dropdown>
+            </b-navbar-nav>
+
+            <b-navbar-nav class="ml-auto" v-else>
+              <b-nav-item-dropdown right>
+                <!-- Using 'button-content' slot -->
+                <template #button-content>
+                  Hi, {{ $root.store.username }}!
+                </template>
+                <b-dropdown-item>Favorites</b-dropdown-item>
+                <b-dropdown-item>My Recipes</b-dropdown-item>
+                <b-dropdown-item>Family Recipes</b-dropdown-item>
+                <b-dropdown-item @click="Logout()">Sign Out</b-dropdown-item>
+            </b-nav-item-dropdown>
+  
+          </b-navbar-nav>
+        </b-collapse>
+      </b-navbar>
     </div>
     <router-view />
   </div>
+
 </template>
 
 <script>
@@ -56,4 +88,5 @@ export default {
 #nav a.router-link-exact-active {
   color: #42b983;
 }
+
 </style>

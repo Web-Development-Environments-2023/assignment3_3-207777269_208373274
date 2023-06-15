@@ -26,6 +26,40 @@
       </b-form-group>
 
       <b-form-group
+        id="input-group-first_name"
+        label-cols-sm="3"
+        label="First Name:"
+        label-for="first_name"
+      >
+        <b-form-input
+          id="first_name"
+          v-model="$v.form.first_name.$model"
+          type="text"
+          :state="validateState('first_name')"
+        ></b-form-input>
+        <b-form-invalid-feedback v-if="!$v.form.first_name.required">
+          First name is required
+        </b-form-invalid-feedback>
+      </b-form-group>
+
+      <b-form-group
+        id="input-group-last_name"
+        label-cols-sm="3"
+        label="Last Name:"
+        label-for="last_name"
+      >
+        <b-form-input
+          id="last_name"
+          v-model="$v.form.last_name.$model"
+          type="text"
+          :state="validateState('last_name')"
+        ></b-form-input>
+        <b-form-invalid-feedback v-if="!$v.form.last_name.required">
+          Last name is required
+        </b-form-invalid-feedback>
+      </b-form-group>
+
+      <b-form-group
         id="input-group-country"
         label-cols-sm="3"
         label="Country:"
@@ -136,8 +170,8 @@ export default {
     return {
       form: {
         username: "",
-        firstName: "",
-        lastName: "",
+        first_name: "",
+        last_name: "",
         country: null,
         password: "",
         confirmedPassword: "",
@@ -155,6 +189,12 @@ export default {
         required,
         length: (u) => minLength(3)(u) && maxLength(8)(u),
         alpha
+      },
+      first_name: {
+        required
+      },
+      last_name: {
+        required
       },
       country: {
         required
@@ -176,6 +216,7 @@ export default {
   },
   methods: {
     validateState(param) {
+      console.log(this.$v.form)
       const { $dirty, $error } = this.$v.form[param];
       return $dirty ? !$error : null;
     },
@@ -187,6 +228,10 @@ export default {
 
           {
             username: this.form.username,
+            first_name: this.form.first_name,
+            last_name: this.form.last_name,
+            country: this.form.country,
+            email: this.form.email,
             password: this.form.password
           }
         );
@@ -209,8 +254,8 @@ export default {
     onReset() {
       this.form = {
         username: "",
-        firstName: "",
-        lastName: "",
+        first_name: "",
+        last_name: "",
         country: null,
         password: "",
         confirmedPassword: "",
