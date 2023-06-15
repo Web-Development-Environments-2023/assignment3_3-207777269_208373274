@@ -11,7 +11,7 @@
       img-top
       tag="article"
       style="max-width: 20rem;"
-      class="mb-2 clickable-card"
+      class="mb-2"
     >
       <b-card-text>
         Some quick example text to build on the card title and make up the bulk of the card's content.
@@ -25,32 +25,39 @@
               {{ recipe.ready_in_minutes }} minutes
             </p>
           </b-col>
-          <b-col>
+          <b-col v-if="recipe.aggregate_likes !== undefined">
             <b-icon icon="hand-thumbs-up" aria-hidden="true"></b-icon>
             <p> {{ recipe.aggregate_likes }} likes</p>
           </b-col>
         </b-row>
       </b-card-text>
-
+      
       <b-container class="bv-example-row">
       <b-row>
-        <b-col>
-          <b-button v-if="!is_favorite !== undefined" @click="addToFavorites($event)" class="transparent-button" variant="outline-dark">
+        <b-col v-if="recipe.is_favorite == true || recipe.is_favorite == false">
+          <b-button :disabled="recipe.is_favorite==true" @click="addToFavorites($event)" class="transparent-button" variant="outline-dark">
             <b-icon v-if="!recipe.is_favorite" icon="heart" aria-hidden="true"></b-icon>
             <b-icon v-else icon="heart-fill" aria-hidden="true"></b-icon>
           </b-button>
         </b-col>
-        <b-col v-if="!recipe.is_seen">
-          <b-icon  icon="eye-fill" aria-hidden="true"></b-icon>
+        <b-col v-if="recipe.is_seen">
+          <b-icon  icon="eye-fill" aria-hidden="true"
+          v-b-tooltip.hover="{ variant: 'secondary' }" title="Seen"></b-icon>
         </b-col>
-        <b-col v-if="!recipe.vegan">
-          <img :src="require('@/assets/icons/vegan-icon.svg')" role="img" alt="icon" class="icon">
+        <b-col v-if="recipe.vegan">
+          <img :src="require('@/assets/icons/vegan-icon.svg')" 
+                role="img" alt="icon" class="icon"
+                v-b-tooltip.hover="{ variant: 'secondary' }" title="Vegan">
         </b-col>
         <b-col v-if="recipe.vegetarian && !recipe.vegan">
-          <img :src="require('@/assets/icons/vegetarian-icon.svg')" role="img" alt="icon" class="icon">
+          <img :src="require('@/assets/icons/vegetarian-icon.svg')" 
+                role="img" alt="icon" class="icon"
+                v-b-tooltip.hover="{ variant: 'secondary' }" title="Vegetarian">
         </b-col>
-        <b-col v-if="!recipe.gluten_free">
-          <img :src="require('@/assets/icons/gluten.png')" role="img" alt="icon" class="icon">
+        <b-col v-if="recipe.gluten_free">
+          <img :src="require('@/assets/icons/gluten.png')"
+                role="img" alt="icon" class="icon"
+                v-b-tooltip.hover="{ variant: 'secondary' }" title="Gluten Free">
         </b-col>
       </b-row>
 
@@ -82,17 +89,21 @@ export default {
   },
   methods: {
     async addToFavorites(event) {
-      const response = axios.post(this.$root.store.server_domain + '/users/favorite',
-       {recipe_id: recipe.id})
-        .then(response => {
-          // Handle the response if needed
-          console.log(response);
-        })
-        .catch(error => {
-          // Handle the error if needed
-          console.error(error);
-        });
+      console.log(this.recipe);
+      try {
+        
+        const response = await this.axios.post(
+          this.$root.store.server_domain +"/users/favorites",
+          {
+            withCredentials: true,
+            recipe_id: this.recipe.id
+          }
+        );
+      } catch (err) {
+        console.log(err);
+      }
     },
+
     navigateToRecipe(){
       this.$router.push({ name: 'recipe', params: { recipeId: this.recipe.id } });
     }
@@ -189,6 +200,13 @@ export default {
 }
 
 .transparent-button:hover {
+  background-color: transparent;
+  border-color: transparent;
+  padding: 0;
+  color: black;
+}
+
+.transparent-button:disabled {
   background-color: transparent;
   border-color: transparent;
   padding: 0;

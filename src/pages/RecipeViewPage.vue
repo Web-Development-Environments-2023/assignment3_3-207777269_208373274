@@ -9,8 +9,8 @@
         <div class="wrapper">
           <div class="wrapped">
             <div class="mb-3">
-              <div>Ready in {{ recipe.readyInMinutes }} minutes</div>
-              <div>Likes: {{ recipe.aggregateLikes }} likes</div>
+              <div>Ready in {{ recipe.ready_in_minutes }} minutes</div>
+              <div>Likes: {{ recipe.aggregate_likes }} likes</div>
             </div>
             Ingredients:
             <ul>
@@ -55,10 +55,10 @@ export default {
 
       try {
         response = await this.axios.get(
-          // "https://test-for-3-2.herokuapp.com/recipes/info",
-          this.$root.store.server_domain + "/recipes/info",
+          this.$root.store.server_domain + "/recipes/" + this.$route.params.recipeId,
           {
-            params: { id: this.$route.params.recipeId }
+            withCredentials: true
+
           }
         );
 

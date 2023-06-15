@@ -7,6 +7,7 @@
   },
   "dependencies": {
     "@popperjs/core": "^2.11.8",
+    "async_hooks": "^1.0.0",
     "axios": "^0.19.2",
     "bootstrap": "^4.6.1",
     "bootstrap-icons": "^1.10.5",

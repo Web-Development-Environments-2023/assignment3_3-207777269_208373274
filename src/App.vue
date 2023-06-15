@@ -34,8 +34,8 @@
                 <template #button-content>
                   Hi, {{ $root.store.username }}!
                 </template>
-                <b-dropdown-item>Favorites</b-dropdown-item>
-                <b-dropdown-item>My Recipes</b-dropdown-item>
+                <b-dropdown-item :to="{ name: 'favorite_recipes' }">Favorites</b-dropdown-item>
+                <b-dropdown-item :to="{ name: 'user_recipes' }">My Recipes</b-dropdown-item>
                 <b-dropdown-item>Family Recipes</b-dropdown-item>
                 <b-dropdown-item @click="Logout()">Sign Out</b-dropdown-item>
             </b-nav-item-dropdown>
@@ -61,6 +61,26 @@ export default {
         this.$forceUpdate();
       });
     }
+    // async Logout() {
+    //   try {
+        
+    //     const response = await this.axios.post(
+    //       this.$root.store.server_domain +"/logout", 
+    //       {
+    //         withCredentials: true
+    //       }
+    //     );
+    //     this.$root.store.logout();
+    //     this.$root.toast("Logout", "User logged out successfully", "success");
+
+    //     this.$router.push("/").catch(() => {
+    //       this.$forceUpdate();
+    //     });
+    //   } catch (err) {
+
+    //   }
+
+    // }
   }
 };
 </script>
