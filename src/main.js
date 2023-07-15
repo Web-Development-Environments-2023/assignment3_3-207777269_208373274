@@ -25,7 +25,8 @@ import {
   ToastPlugin,
   LayoutPlugin,
   BootstrapVueIcons,
-  VBTooltipPlugin  
+  VBTooltipPlugin,
+  ListGroupPlugin 
 } from "bootstrap-vue";
 [
   FormGroupPlugin,
@@ -39,8 +40,8 @@ import {
   ToastPlugin,
   LayoutPlugin,
   BootstrapVueIcons,
-  VBTooltipPlugin 
-
+  VBTooltipPlugin,
+  ListGroupPlugin 
 ].forEach((x) => Vue.use(x));
 Vue.use(Vuelidate);
 
@@ -54,7 +55,7 @@ axios.interceptors.request.use(
     return Promise.reject(error);
   }
 );
-
+axios.defaults.withCredentials = true
 // Add a response interceptor
 axios.interceptors.response.use(
   function(response) {
