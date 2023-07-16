@@ -3,9 +3,8 @@
     <b-card
       no-body
       tag="article"
+      :style="{ height: height, width: width }"
       class="mb-2"
-      style="  height: 380px;
-      width: 400px;"
     >
        <router-link :to="{ name: route_name, params: { recipeId: recipe.recipe_id } }"
                >
@@ -99,6 +98,14 @@ export default {
     },
     route_name:{
       type: String
+    },
+    width: {
+      type: String,
+      default: "400px"
+    },
+    height: {
+      type: String,
+      default: "380px"
     }
   },
   methods: {
@@ -243,11 +250,10 @@ export default {
 }
 
 .card{
-  height: 400px;
-  width: 400px;
+  /* height: 400px;
+  width: 400px; */
   border-radius: 5;
   box-shadow: 0 0px 5px rgba(0, 0, 0, 0.1);
-
 }
 
 .card-img-top{
