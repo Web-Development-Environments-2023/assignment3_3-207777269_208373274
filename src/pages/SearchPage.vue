@@ -26,7 +26,7 @@
               <label for="num_of_results">Maximum number of results: {{ searchForm.num_of_results }}</label>
             </b-col>
             <b-col>
-              <b-form-input id="num_of_results" v-model="searchForm.num_of_results" type="range" min="1" max="15" step="5"></b-form-input>
+              <b-form-input id="num_of_results" v-model="searchForm.num_of_results" type="range" min="1" max="15" step="1"></b-form-input>
             </b-col>
           </b-form-row>
         </b-form-group>
@@ -41,7 +41,7 @@
     </div>
 
     <div class="container results-container" v-if="showResults">
-
+      <h1 class="title" style="font-size: 25px;">{{ resultTitle }}</h1>
       <b-button-group size="sm">
         <b-button
           v-for="(btn, idx) in buttons"
@@ -55,22 +55,26 @@
 
       <RecipePreviewList 
         :recipes="searchResultsRecipes"
-        :title="resultTitle"
         :class="{
           RandomRecipes: true,
           center: true
-        }">
+        }"
+        width="450px"
+        >
       </RecipePreviewList>
     </div>
 
     <div class="history-container" v-if="searchHistoryRecipes.length > 0">
+      <h1 class="title" style="font-size: 25px;">{{ searchHistoryTitle }}</h1>
       <RecipePreviewList 
         :recipes="searchHistoryRecipes"
-        :title="searchHistoryTitle"
         :class="{
           RandomRecipes: true,
           center: true
-        }">
+        }"
+        width="230px"
+        >
+        
       </RecipePreviewList>
     </div>
 
@@ -161,23 +165,31 @@ export default {
       return this.searchResultsRecipes.length > 0;
     },
     resultTitle() {
-    return `Showing ${this.searchResultsRecipes.length} Results`;
+      let messageToReturn = `${this.searchResultsRecipes.length} recipe`;
+      if (this.searchResultsRecipes.length > 1)
+        messageToReturn += 's';
+      messageToReturn += ' found';
+      return messageToReturn;
     }
   }
 };
 </script>
 <style lang="scss" scoped>
 .container {
-  max-width: 500px;
+  // max-width: 500px;
 }
 .main-container {
   display: flex;
 }
-.history-container {
-  margin-left: auto;
-  margin-right: auto;
+.search-container {
+  // margin-right: -20px;
 }
-.results-container {
-  max-width: 800px;
+.search-container, .results-container {
+  width: 35%;
+}
+.history-container {
+  margin-right: 50px;
 }
 </style>
+
+
