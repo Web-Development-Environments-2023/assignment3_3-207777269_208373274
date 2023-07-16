@@ -1,12 +1,12 @@
 <template>
-  <div>
-    <h3>
+  <div class="flex-center">
+    <h3 class="header">
       {{ title }}:
       <slot></slot>
     </h3>
-    <b-card-group columns>
+    <b-card-group class="flex-center">
       <div v-for="r in recipes" :key="r.id">
-        <RecipePreview class="recipePreview" :recipe="r" />
+        <RecipePreview class="recipePreview" :recipe="r" :route_name="route_name"/>
       </div>
     </b-card-group>
  
@@ -29,6 +29,9 @@ export default {
     recipes: {
       type: Array,
       required: true
+    },
+    route_name: {
+      type: String
     }
   },
   mounted() {
@@ -41,5 +44,8 @@ export default {
 <style lang="scss" scoped>
 .container {
   min-height: 400px;
+}
+.recipePreview{
+  padding: 0px 10px 10px 0px;
 }
 </style>

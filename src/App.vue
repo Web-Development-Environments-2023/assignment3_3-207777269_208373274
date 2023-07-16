@@ -1,8 +1,10 @@
 <template>
   <div id="app">
     <div>
-      <b-navbar toggleable="lg" type="dark" variant="dark">
-        <b-navbar-brand>RecipesLogo</b-navbar-brand>
+      <b-navbar toggleable="lg" type="dark" variant="dark" class="nabvar">
+        <b-navbar-brand>
+          <img src="./assets/icons/pngwing.com.png" width="40px" height="40px">
+        </b-navbar-brand>
 
         <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
@@ -25,6 +27,7 @@
                 </b-dropdown-item>
                 <b-dropdown-item :to="{ name: 'login' }">Login
                 </b-dropdown-item>
+                <b-dropdown-item @click="Logout()">Sign Out</b-dropdown-item>
               </b-nav-item-dropdown>
             </b-navbar-nav>
 
@@ -44,7 +47,7 @@
         </b-collapse>
       </b-navbar>
     </div>
-    <router-view />
+    <router-view class="page"/>
   </div>
 
 </template>
@@ -53,34 +56,35 @@
 export default {
   name: "App",
   methods: {
-    Logout() {
-      this.$root.store.logout();
-      this.$root.toast("Logout", "User logged out successfully", "success");
+    // Logout() {
+    //   this.$root.store.logout();
+    //   this.$root.toast("Logout", "User logged out successfully", "success");
 
-      this.$router.push("/").catch(() => {
-        this.$forceUpdate();
-      });
-    }
-    // async Logout() {
-    //   try {
-        
-    //     const response = await this.axios.post(
-    //       this.$root.store.server_domain +"/logout", 
-    //       {
-    //         withCredentials: true
-    //       }
-    //     );
-    //     this.$root.store.logout();
-    //     this.$root.toast("Logout", "User logged out successfully", "success");
-
-    //     this.$router.push("/").catch(() => {
-    //       this.$forceUpdate();
-    //     });
-    //   } catch (err) {
-
-    //   }
-
+    //   this.$router.push("/").catch(() => {
+    //     this.$forceUpdate();
+    //   });
     // }
+    async Logout() {
+      try {
+        
+        const response = await this.axios.post(
+          this.$root.store.server_domain +"/logout", 
+          {
+            withCredentials: true
+          }
+        );
+        this.$root.store.logout();
+        this.$root.toast("Logout", "User logged out successfully", "success");
+
+        this.$router.push("/").catch(() => {
+          this.$forceUpdate();
+        });
+        this.$forceUpdate();
+      } catch (err) {
+
+      }
+
+    }
   }
 };
 </script>
@@ -94,6 +98,8 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
   min-height: 100vh;
+  background-color: aliceblue;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 #nav {
@@ -103,10 +109,46 @@ export default {
 #nav a {
   font-weight: bold;
   color: #2c3e50;
+  // font-family: Roboto,Helvetica,sans-serif;
 }
 
 #nav a.router-link-exact-active {
   color: #42b983;
 }
+.header{
+  font-family: "Frank Ruhl Libre",Georgia,serif;
+}
 
+.navbar{
+  box-shadow: 0 0.25rem 0.25rem rgba(0,0,0,.25), inset 0 -1px 5px rgba(0,0,0,.25);
+
+}
+.flex-center{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+/* custom scrollbar */
+::-webkit-scrollbar {
+  width: 20px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #d6dee1;
+  border-radius: 20px;
+  border: 6px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #a8bbbf;
+}
+.page{
+  padding-top: 20px;
+}
 </style>

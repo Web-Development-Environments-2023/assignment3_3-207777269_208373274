@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h1 class="title">Login</h1>
+    <h3 class="title header">Login</h3>
     <b-form @submit.prevent="onLogin">
       <b-form-group
         id="input-group-Username"
@@ -38,7 +38,7 @@
 
       <b-button
         type="submit"
-        variant="primary"
+        variant="outline-primary"
         style="width:100px;display:block;"
         class="mx-auto w-100"
         >Login</b-button
@@ -112,6 +112,7 @@ export default {
         console.log(err.response);
         this.form.submitError = err.response.data.message;
       }
+
     },
     onLogin() {
       // console.log("login method called");

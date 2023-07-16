@@ -3,7 +3,7 @@
         <b-container class="bv-example-row">
             <b-row align-v="center">
                 <b-col>    
-                    <RecipePreviewList :recipes="recipes" title="My Recipes" class="RandomRecipes center" />
+                    <RecipePreviewList :recipes="recipes" title="My Recipes" class="RandomRecipes center" route_name="user_recipe_view" />
                 </b-col>
             </b-row>
         </b-container>

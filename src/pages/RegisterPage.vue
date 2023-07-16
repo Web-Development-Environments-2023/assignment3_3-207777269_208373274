@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h1 class="title">Register</h1>
+    <h1 class="title header">Register</h1>
     <b-form @submit.prevent="onRegister" @reset.prevent="onReset">
       <b-form-group
         id="input-group-username"
@@ -124,10 +124,10 @@
         </b-form-invalid-feedback>
       </b-form-group>
 
-      <b-button type="reset" variant="danger">Reset</b-button>
+      <b-button type="reset" variant="outline-dark">Reset</b-button>
       <b-button
         type="submit"
-        variant="primary"
+        variant="outline-primary"
         style="width:250px;"
         class="ml-5 w-75"
         >Register</b-button
@@ -271,5 +271,12 @@ export default {
 <style lang="scss" scoped>
 .container {
   max-width: 500px;
+}
+
+.title{
+  padding-top: 35px;
+  padding-bottom: 35px;
+  text-align: center;
+  // font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 </style>

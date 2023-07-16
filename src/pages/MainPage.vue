@@ -1,25 +1,28 @@
 <template>
   <div class="container">
+    <img src="../assets/website-image.jpg" class="homepage-image"/>
     <b-container class="bv-example-row">
-    <b-row align-v="center">
-      <b-col>    
-        <RecipePreviewList :recipes="randomRecipes" title="Random Recipes" class="RandomRecipes center" />
-      </b-col>
-      <b-col v-if="$root.store.username">
-        <RecipePreviewList
-          title="Last Viewed Recipes"
-          :recipes="lastWatchedRecipes"
-          :class="{
-            RandomRecipes: true,
-            center: true
-          }"
-          disabled
-        ></RecipePreviewList>
-      </b-col>
-      <b-col v-else>
-        <LoginComponent></LoginComponent>
-      </b-col>
-    </b-row>
+      <b-row align-v="baseline" class="content-overlay">
+        <b-col class="flex-center">    
+          <RecipePreviewList :recipes="randomRecipes" title="Random Recipes" class="RandomRecipes center" route_name="recipe"/>
+          <b-button variant="outline-secondary" @click="getRandomRecipes();">Surprise me</b-button>
+        </b-col>
+        <b-col v-if="$root.store.username" class="flex-center">
+          <RecipePreviewList
+            title="Last Viewed Recipes"
+            :recipes="lastWatchedRecipes"
+            :class="{
+              RandomRecipes: true,
+              center: true
+            }"
+            disabled
+            route_name="recipe"
+          ></RecipePreviewList>
+        </b-col>
+        <b-col v-else>
+          <LoginComponent></LoginComponent>
+        </b-col>
+      </b-row>
   </b-container>
   </div>
 </template>
@@ -77,11 +80,11 @@ export default {
     }
   },
   mounted() {
-    this.randomRecipes = this.recipes;
-    this.lastWatchedRecipes = this.recipes;
-
-    // this.getRandomRecipes();
-    // this.getLastWatchedRecipes();
+    // this.randomRecipes = this.recipes;
+    // this.lastWatchedRecipes = this.recipes;
+    console.log("hi")
+    this.getRandomRecipes();
+    this.getLastWatchedRecipes();
   },
   methods: {
     async getRandomRecipes() {
@@ -138,5 +141,23 @@ export default {
 ::v-deep .blur .recipe-preview {
   pointer-events: none;
   cursor: default;
+}
+
+.container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.homepage-image{
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.content-overlay{
+  background: white;
+  border-radius: 5px;
+  box-shadow: 0 4px 10px 4px rgba(213,213,232,.25);
+  position: relative;
+  margin-top: -115px;
 }
 </style>
