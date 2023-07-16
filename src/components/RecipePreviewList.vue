@@ -6,7 +6,7 @@
     </h3>
     <b-card-group class="flex-center">
       <div v-for="r in recipes" :key="r.id">
-        <RecipePreview class="recipePreview" :recipe="r" :route_name="route_name"/>
+        <RecipePreview class="recipePreview" :width="width" :height="height" :recipe="r" :route_name="route_name"/>
       </div>
     </b-card-group>
  
@@ -32,6 +32,14 @@ export default {
     },
     route_name: {
       type: String
+    },
+    width: {
+      type: String,
+      default: "400px"
+    },
+    height: {
+      type: String,
+      default: "380px"
     }
   },
   mounted() {
