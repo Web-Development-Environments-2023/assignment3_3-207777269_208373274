@@ -26,7 +26,7 @@
               <label for="num_of_results">Maximum number of results: {{ searchForm.num_of_results }}</label>
             </b-col>
             <b-col>
-              <b-form-input id="num_of_results" v-model="searchForm.num_of_results" type="range" min="5" max="15" step="5"></b-form-input>
+              <b-form-input id="num_of_results" v-model="searchForm.num_of_results" type="range" min="1" max="15" step="5"></b-form-input>
             </b-col>
           </b-form-row>
         </b-form-group>
@@ -40,6 +40,28 @@
       </b-alert>
     </div>
 
+    <div class="container results-container" v-if="showResults">
+
+      <b-button-group size="sm">
+        <b-button
+          v-for="(btn, idx) in buttons"
+          :key="idx"
+          :pressed.sync="btn.state"
+          variant="primary"
+        >
+          {{ btn.caption }}
+        </b-button>
+      </b-button-group>
+
+      <RecipePreviewList 
+        :recipes="searchResultsRecipes"
+        :title="resultTitle"
+        :class="{
+          RandomRecipes: true,
+          center: true
+        }">
+      </RecipePreviewList>
+    </div>
 
     <div class="history-container" v-if="searchHistoryRecipes.length > 0">
       <RecipePreviewList 
@@ -52,17 +74,6 @@
       </RecipePreviewList>
     </div>
 
-
-    <div class="container results-container" v-if="showResults">
-      <RecipePreviewList 
-        :recipes="searchResultsRecipes"
-        :title="resultTitle"
-        :class="{
-          RandomRecipes: true,
-          center: true
-        }">
-      </RecipePreviewList>
-    </div>
   </div>
 </template>
 
@@ -144,7 +155,7 @@ export default {
       return searchHistoryRecipes ? JSON.parse(searchHistoryRecipes) : [];
     },
     searchHistoryTitle() {
-      return `Your last search, "${window.sessionStorage.getItem('searchHistoryText')}"":`;
+      return `Your last search, "${window.sessionStorage.getItem('searchHistoryText')}"`;
     },
     showResults() {
       return this.searchResultsRecipes.length > 0;
@@ -163,7 +174,8 @@ export default {
   display: flex;
 }
 .history-container {
-  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
 }
 .results-container {
   max-width: 800px;
