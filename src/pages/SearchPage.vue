@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div class="container">
+  <div class="main-container">
+    <div class="container search-container">
       <h1 class="title">Search</h1>
 
       <b-form @submit.prevent="submit" @reset.prevent="reset">
@@ -41,14 +41,27 @@
     </div>
 
 
-    <div class="container">
-      <b-container class="bv-example-row">
-      <b-row align-v="center">
-        <b-col>    
-          <RecipePreviewList title="Search Results Recipes" class="SearchResultsRecipes center" />
-        </b-col>
-      </b-row>
-    </b-container>
+    <div class="history-container" v-if="searchHistoryRecipes.length > 0">
+      <RecipePreviewList 
+        :recipes="searchHistoryRecipes"
+        :title="searchHistoryTitle"
+        :class="{
+          RandomRecipes: true,
+          center: true
+        }">
+      </RecipePreviewList>
+    </div>
+
+
+    <div class="container results-container" v-if="showResults">
+      <RecipePreviewList 
+        :recipes="searchResultsRecipes"
+        :title="resultTitle"
+        :class="{
+          RandomRecipes: true,
+          center: true
+        }">
+      </RecipePreviewList>
     </div>
   </div>
 </template>
@@ -57,8 +70,11 @@
 import cuisines from "../assets/cuisines";
 import diets from "../assets/diets";
 import intolerances from "../assets/intolerances";
+import RecipePreviewList from "../components/RecipePreviewList";
 export default {
-  name: "Search",
+  components: {
+    RecipePreviewList
+  },
   data() {
     return {
       searchForm: {
@@ -71,15 +87,14 @@ export default {
       cuisines: [],
       diets: [],
       intolerances: [],
-      search_error: undefined
+      search_error: undefined,
+      searchResultsRecipes: []
     };
   },
   mounted() {
-    // console.log("mounted");
     this.cuisines.push(...cuisines);
     this.diets.push(...diets);
     this.intolerances.push(...intolerances);
-    // console.log($v);
   },
   methods: {
     async submit() {
@@ -93,9 +108,12 @@ export default {
             number: this.searchForm.num_of_results
           }
         });
-        console.log(response.data);
+        this.searchResultsRecipes = response.data;
+        if (this.searchResultsRecipes.length > 0) {
+          window.sessionStorage.setItem('searchHistoryText', this.searchForm.text_to_search);
+          window.sessionStorage.setItem('searchHistoryRecipes', JSON.stringify(this.searchResultsRecipes));
+        }
       } catch (err) {
-        console.log(err);
         if (err.response) {
           this.search_error = err.response.data.message;
         } else {
@@ -120,6 +138,19 @@ export default {
         this.searchForm.selected_cuisines.length > 0 ||
         this.searchForm.selected_diets.length > 0 ||
         this.searchForm.selected_intolerances.length > 0;
+    },
+    searchHistoryRecipes() {
+      const searchHistoryRecipes = window.sessionStorage.getItem('searchHistoryRecipes');
+      return searchHistoryRecipes ? JSON.parse(searchHistoryRecipes) : [];
+    },
+    searchHistoryTitle() {
+      return `Your last search, "${window.sessionStorage.getItem('searchHistoryText')}"":`;
+    },
+    showResults() {
+      return this.searchResultsRecipes.length > 0;
+    },
+    resultTitle() {
+    return `Showing ${this.searchResultsRecipes.length} Results`;
     }
   }
 };
@@ -127,5 +158,14 @@ export default {
 <style lang="scss" scoped>
 .container {
   max-width: 500px;
+}
+.main-container {
+  display: flex;
+}
+.history-container {
+  max-width: 500px;
+}
+.results-container {
+  max-width: 800px;
 }
 </style>

@@ -27,7 +27,6 @@
 <script>
 import RecipePreviewList from "../components/RecipePreviewList";
 import LoginComponent from "../components/LoginComponent.vue"
-import { executionAsyncResource } from "async_hooks";
 export default {
   components: {
     RecipePreviewList,
