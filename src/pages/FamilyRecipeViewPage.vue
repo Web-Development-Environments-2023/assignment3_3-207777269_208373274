@@ -4,11 +4,18 @@
       <img :src="recipe.image" class="homepage-image"/>
         <b-container v-if="recipe" class="recipe-body content-overlay">
           <b-row>
-            <RecipeInfoComponent :recipe="recipe"></RecipeInfoComponent>
-          </b-row>
-          <b-row>
             <b-col>
-              <h4 class="header" v-if="recipe.portions">Ingredients ({{ recipe.portions }} portions):</h4>
+              <RecipeInfoComponent :recipe="recipe"></RecipeInfoComponent>
+            </b-col>
+            <b-col>
+              <h5 class="header">Family Member: {{ recipe.family_member }}</h5>
+              <h5 class="header">Traditional Time: {{ recipe.traditional_time }}</h5>
+              
+            </b-col>
+          </b-row>
+          <b-row class="margin-top">
+            <b-col>
+              <h4 v-if="recipe.portions" class="header">Ingredients ({{ recipe.portions }} portions):</h4>
               <h4 v-else class="header">Ingredients:</h4>
                   <b-list-group>
                     <b-list-group-item v-for="(r, index) in recipe.ingredients"
@@ -27,15 +34,31 @@
                   </b-list-group>
             </b-col>
           </b-row>
+          <b-row class="margin-top">
+            <h4 class="header">Pictures:</h4>
+          </b-row>
+          <b-row >            
+            <!-- <b-col v-for="(image, index) in recipe.images" :key="index" lg="3" md="4" sm="6" class="mb-3"> -->
+              <!-- Use b-card to display the image -->
+              <!-- <b-card :img-src="image.image_url" img-alt="Image" img-top tag="article"> -->
+                <!-- Image description or other content here -->
+              <!-- </b-card> -->
+              <!-- <img :src="image.image_url" class="small-image"/> -->
+            <!-- </b-col> -->
+          </b-row>
+          <CarouselGallery :images="recipe.images"></CarouselGallery>
         </b-container>
+
     </div>
   </template>
   
   <script>
     import RecipeInfoComponent from '../components/RecipeInfoComponent.vue';
+    import CarouselGallery from '../components/CarouselGallery.vue';
   export default {
     components:{
-      RecipeInfoComponent
+      RecipeInfoComponent,
+      CarouselGallery
     },
     data() {
       return {
@@ -54,7 +77,7 @@
   
         try {
           response = await this.axios.get(
-            this.$root.store.server_domain + "/users/user_recipes/" + this.$route.params.recipeId,
+            this.$root.store.server_domain + "/users/family_recipes/" + this.$route.params.recipeId,
             {
               withCredentials: true
             }
@@ -80,7 +103,10 @@
           gluten_free,
           portions,
           is_seen,
-          is_favorite
+          is_favorite,
+          family_member,
+          images,
+          traditional_time
         } = response.data;
         console.log(instructions)
         // let _instructions = instructions
@@ -102,7 +128,10 @@
           gluten_free,
           portions,
           is_seen,
-          is_favorite
+          is_favorite,
+          family_member,
+          images,
+          traditional_time
         };
   
         this.recipe = _recipe;
@@ -191,5 +220,15 @@
     position: relative;
     margin-top: -160px;
   }
+  .small-image{
+    height: 200px;
+    width: 250px; 
+  }
+
+  .margin-top{
+    margin-top: 20px;
+  }
+
+
   </style>
   

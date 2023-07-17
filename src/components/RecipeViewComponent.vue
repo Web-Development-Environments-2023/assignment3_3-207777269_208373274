@@ -8,13 +8,13 @@
                 class="recipe-page-header"
                 >
               </b-card> -->
-        <RecipeInfoComponent :recipe="recipe"></RecipeInfoComponent>
         <b-container v-if="recipe" class="recipe-body content-overlay">
           <b-row>
+            <RecipeInfoComponent :recipe="recipe"></RecipeInfoComponent>
           </b-row>
           <b-row>
             <b-col>
-              <h4 v-if="portions">Ingredients ({{ porthions }} portions):</h4>
+              <h4 class="header" v-if="recipe.portions">Ingredients ({{ recipe.portions }} portions):</h4>
               <h4 v-else class="header">Ingredients:</h4>
                   <b-list-group>
                     <b-list-group-item v-for="(r, index) in recipe.extended_ingredients"

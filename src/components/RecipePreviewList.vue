@@ -1,7 +1,7 @@
 <template>
   <div :class="{ 'flex-center': true, 'card-group-column': isColumn }">
     <h3 class="header">
-      {{ title }}:
+      {{ title }}
       <slot></slot>
     </h3>
     <b-card-group class="flex-center">

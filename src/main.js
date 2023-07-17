@@ -15,6 +15,7 @@ import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
 import {
   FormGroupPlugin,
+  FormCheckboxPlugin,
   FormPlugin,
   FormInputPlugin,
   ButtonPlugin,
@@ -26,10 +27,13 @@ import {
   LayoutPlugin,
   BootstrapVueIcons,
   VBTooltipPlugin,
-  ListGroupPlugin 
+  ListGroupPlugin,
+  ModalPlugin,
+  CarouselPlugin 
 } from "bootstrap-vue";
 [
   FormGroupPlugin,
+  FormCheckboxPlugin,
   FormPlugin,
   FormInputPlugin,
   ButtonPlugin,
@@ -41,7 +45,9 @@ import {
   LayoutPlugin,
   BootstrapVueIcons,
   VBTooltipPlugin,
-  ListGroupPlugin 
+  ListGroupPlugin ,
+  ModalPlugin,
+  CarouselPlugin 
 ].forEach((x) => Vue.use(x));
 Vue.use(Vuelidate);
 

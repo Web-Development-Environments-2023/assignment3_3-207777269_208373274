@@ -31,7 +31,7 @@
               <b-icon icon="hand-thumbs-up" aria-hidden="true"></b-icon>
               <p> {{ recipe.aggregate_likes }} likes</p>
             </b-col>
-          <b-col v-if="recipe.is_favorite == true || recipe.is_favorite == false" class="info-center">
+          <b-col v-if="$root.store.username && (recipe.is_favorite == true || recipe.is_favorite == false)" class="info-center">
             <b-button :disabled="recipe.is_favorite==true" @click="addToFavorites($event)" class="transparent-button" variant="outline-dark"
             >
               <b-icon v-if="!recipe.is_favorite" icon="heart" aria-hidden="true"
