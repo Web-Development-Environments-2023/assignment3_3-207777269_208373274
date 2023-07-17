@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-center">
+  <div :class="{ 'flex-center': true, 'card-group-column': isColumn }">
     <h3 class="header">
       {{ title }}:
       <slot></slot>
@@ -40,6 +40,10 @@ export default {
     height: {
       type: String,
       default: "380px"
+    },
+    isColumn:{
+      type: Boolean,
+      default: false
     }
   },
   mounted() {
@@ -57,6 +61,9 @@ export default {
   padding: 0px 10px 10px 0px;
 }
 .card-group{
+  flex-flow: column wrap;
+}
+.card-group-column{
   flex-flow: column wrap;
 }
 </style>
