@@ -89,11 +89,6 @@ export default {
         this.$root.toast("Logout", "User logged out successfully", "success");
         this.$router.push("/");
         this.$forceUpdate();
-
-        // this.$router.push("#").catch(() => {
-        //   console.log("hi")
-        //   this.$forceUpdate();
-        // });
       } catch (err) {
 
       }

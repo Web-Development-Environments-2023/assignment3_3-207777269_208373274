@@ -82,7 +82,6 @@ export default {
   mounted() {
     // this.randomRecipes = this.recipes;
     // this.lastWatchedRecipes = this.recipes;
-    console.log("hi")
     this.getRandomRecipes();
     this.getLastWatchedRecipes();
   },
@@ -97,11 +96,9 @@ export default {
             }
         });
 
-        console.log(response);
         const recipes = response.data;
         this.randomRecipes = [];
         this.randomRecipes.push(...recipes);
-        // console.log(this.recipes);
       } catch (error) {
         console.log(error);
       }
@@ -117,11 +114,9 @@ export default {
             }
         });
 
-        console.log(response);
         const recipes = response.data;
         this.lastWatchedRecipes = [];
         this.lastWatchedRecipes.push(...recipes);
-        // console.log(this.recipes);
       } catch (error) {
         console.log(error);
       }

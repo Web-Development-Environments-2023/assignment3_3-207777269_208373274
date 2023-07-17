@@ -83,7 +83,6 @@
             }
           );
   
-          console.log(response);
           if (response.status !== 200) this.$router.replace("/NotFound");
         } catch (error) {
           console.log("error.response.status", error.response.status);
@@ -108,7 +107,6 @@
           images,
           traditional_time
         } = response.data;
-        console.log(instructions)
         // let _instructions = instructions
         //   .map((fstep) => {
         //     fstep.steps[0].step = fstep.name + fstep.steps[0].step;

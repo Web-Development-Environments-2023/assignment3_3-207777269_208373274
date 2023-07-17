@@ -130,11 +130,7 @@
       // Update the number for each remaining instruction
       this.recipe.instructions = this.recipe.instructions.map((instruction, index) => ({ instruction_number: index + 1, instruction_string: instruction.instruction_string }));
     },
-    submitForm() {
-        console.log(this.recipe);
-    },
     async addRecipe() {
-    console.log(this.recipe);
       try {
         const vegan = 0;
         const vegetarian = 0;

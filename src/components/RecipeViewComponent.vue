@@ -48,7 +48,6 @@
 
     methods: {
       async addToFavorites(event) {
-        console.log(this.recipe.recipe_id);
         try {
           
           const response = await this.axios.post(
