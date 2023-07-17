@@ -5,7 +5,7 @@
       <b-row align-v="baseline" class="content-overlay">
         <b-col class="flex-center">    
           <RecipePreviewList :recipes="randomRecipes" title="Explore this recipes" class="RandomRecipes center" route_name="recipe"/>
-          <b-button variant="outline-secondary" @click="getRandomRecipes();">Surprise me</b-button>
+          <b-button style="margin-bottom: 5%;" variant="outline-secondary" @click="getRandomRecipes();">Surprise me</b-button>
         </b-col>
         <b-col v-if="$root.store.username" class="flex-center">
           <RecipePreviewList
@@ -147,6 +147,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-bottom: 3%;
 }
 
 .homepage-image{

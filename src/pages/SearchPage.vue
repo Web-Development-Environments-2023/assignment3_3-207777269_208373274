@@ -55,6 +55,7 @@
         }"
         width="600px"
         :isColumn=true
+        route_name="recipe"
         >
       </RecipePreviewList>
     </div>
@@ -74,8 +75,8 @@
         }"
         width="190px"
         :isColumn=true
+        route_name="recipe"
         >
-        
       </RecipePreviewList>
     </div>
 
