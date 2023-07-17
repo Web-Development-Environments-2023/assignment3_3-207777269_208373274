@@ -43,9 +43,27 @@ const routes = [
     component: () => import("./pages/MyRecipesPage")
   },
   {
+    path: "/user/family_recipes",
+    name: "family_recipes",
+    component: () => import("./pages/FamilyRecipesPage")
+  },
+  {
   path: "/user/user_recipes/:recipeId",
   name: "user_recipe_view",
   component: () => import("./pages/MyRecipeViewPage"),
+  },
+  {
+    path: "/user/add_user_recipes",
+    name: "add_user_recipe",
+    // component: () => import("./components/AddMyRecipeComponent"),
+    ref: "addRecipeModal", // Add the ref attribute
+
+    },
+  
+  {
+  path: "/user/family_recipes/:recipeId",
+  name: "family_recipe_view",
+  component: () => import("./pages/FamilyRecipeViewPage"),
   },
 
   {
