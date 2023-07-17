@@ -60,9 +60,6 @@ export default {
 .recipePreview{
   padding: 0px 10px 10px 0px;
 }
-.card-group{
-  flex-flow: column wrap;
-}
 .card-group-column{
   flex-flow: column wrap;
 }

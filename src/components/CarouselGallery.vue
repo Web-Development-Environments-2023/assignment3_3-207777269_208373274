@@ -43,7 +43,6 @@ export default {
     },
     methods: {
       onSlideStart(slide) {
-        console.log(images)
         this.sliding = true
       },
       onSlideEnd(slide) {

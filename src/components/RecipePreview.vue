@@ -32,7 +32,7 @@
               <p> {{ recipe.aggregate_likes }} likes</p>
             </b-col>
           <b-col v-if="$root.store.username && (recipe.is_favorite == true || recipe.is_favorite == false)" class="info-center">
-            <b-button :disabled="recipe.is_favorite==true" @click="addToFavorites($event)" class="transparent-button" variant="outline-dark"
+            <b-button :disabled="recipe.is_favorite==true" @click="addToFavorites()" class="transparent-button" variant="outline-dark"
             >
               <b-icon v-if="!recipe.is_favorite" icon="heart" aria-hidden="true"
               v-b-tooltip.hover="{ variant: 'secondary' }" title="Add to favorites"></b-icon>
@@ -82,13 +82,12 @@ export default {
     this.axios.get(this.recipe.image).then((i) => {
       this.image_load = true;
     });
-    // const image = document.getElementsByClassName('card-img-top');
-    // console.log(image)
-    // image.addEventListener('click', navigateToRecipe);
+    this.recipe_ = this.recipe;
   },
   data() {
     return {
       image_load: false,
+      recipe_: {}
     };
   },
   props: {
@@ -109,14 +108,13 @@ export default {
     }
   },
   methods: {
-    async addToFavorites(event) {
-      console.log(this.recipe.id);
+    async addToFavorites() {
       try {
         
         const response = await this.axios.post(
           this.$root.store.server_domain +"/users/favorites",
           { 
-            recipe_id: this.recipe.id
+            recipe_id: this.recipe_.recipe_id
           }
           
         );

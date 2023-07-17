@@ -47,13 +47,12 @@
         },
         methods: {
             async addToFavorites(event) {
-            console.log(this.recipe.id);
             try {
                 
                 const response = await this.axios.post(
                 this.$root.store.server_domain +"/users/favorites",
                 { 
-                    recipe_id: this.recipe.id
+                    recipe_id: this.recipe.recipe_id
                 }
                 
                 );
