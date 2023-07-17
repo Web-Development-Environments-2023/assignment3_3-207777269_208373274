@@ -1,7 +1,7 @@
 <template>
   <div class="main-container">
-    <div class="container search-container">
-      <h1 class="title">Search</h1>
+    <div class="container search-container" :style="searchContainerStyle">
+      <h1 class="title" style="font-family: Frank Ruhl Libre, Georgia, serif; font-size: 30px;">Search</h1>
 
       <b-form @submit.prevent="submit" @reset.prevent="reset">
         <b-form-group id="input-group-text_to_search">
@@ -26,7 +26,7 @@
               <label for="num_of_results">Maximum number of results: {{ searchForm.num_of_results }}</label>
             </b-col>
             <b-col>
-              <b-form-input id="num_of_results" v-model="searchForm.num_of_results" type="range" min="1" max="15" step="1"></b-form-input>
+              <b-form-input id="num_of_results" v-model="searchForm.num_of_results" type="range" min="5" max="15" step="5"></b-form-input>
             </b-col>
           </b-form-row>
         </b-form-group>
@@ -41,38 +41,39 @@
     </div>
 
     <div class="container results-container" v-if="showResults">
-      <h1 class="title" style="font-size: 25px;">{{ resultTitle }}</h1>
-      <b-button-group size="sm">
-        <b-button
-          v-for="(btn, idx) in buttons"
-          :key="idx"
-          :pressed.sync="btn.state"
-          variant="primary"
-        >
-          {{ btn.caption }}
-        </b-button>
-      </b-button-group>
+      <div class="sorting-buttons-container">
+        <b-button @click="sortResultsByPreparationTime" squared variant="outline-secondary">Sort by Preparation Time</b-button>
+        <b-button @click="sortResultsByPopularity" squared variant="outline-secondary">Sort by Popularity</b-button>
+      </div>
 
       <RecipePreviewList 
+        :title="resultTitle"
         :recipes="searchResultsRecipes"
         :class="{
           RandomRecipes: true,
           center: true
         }"
-        width="450px"
+        width="600px"
+        :isColumn=true
         >
       </RecipePreviewList>
     </div>
 
+    <div class="container results-container no-results-container" v-else-if="isSearchPerformed">
+      <h1 class="title" style="font-family: Frank Ruhl Libre, Georgia, serif; font-size: 40px;">No Results Found</h1>
+      <img src="../assets/Sad Tomato.png" alt="No Results Found" width="150">
+    </div>
+
     <div class="history-container" v-if="searchHistoryRecipes.length > 0">
-      <h1 class="title" style="font-size: 25px;">{{ searchHistoryTitle }}</h1>
       <RecipePreviewList 
+        :title="searchHistoryTitle"
         :recipes="searchHistoryRecipes"
         :class="{
           RandomRecipes: true,
           center: true
         }"
-        width="230px"
+        width="190px"
+        :isColumn=true
         >
         
       </RecipePreviewList>
@@ -86,6 +87,7 @@ import cuisines from "../assets/cuisines";
 import diets from "../assets/diets";
 import intolerances from "../assets/intolerances";
 import RecipePreviewList from "../components/RecipePreviewList";
+
 export default {
   components: {
     RecipePreviewList
@@ -103,7 +105,10 @@ export default {
       diets: [],
       intolerances: [],
       search_error: undefined,
-      searchResultsRecipes: []
+      searchResultsRecipes: [],
+      previousSearchText: window.sessionStorage.getItem('searchHistoryText') || "",
+      previousSearchResults: JSON.parse(window.sessionStorage.getItem('searchHistoryRecipes')) || [],
+      isSearchPerformed: false
     };
   },
   mounted() {
@@ -112,7 +117,7 @@ export default {
     this.intolerances.push(...intolerances);
   },
   methods: {
-    async submit() {
+    async submit() {  
       try {
         const response = await this.axios.get(`${this.$root.store.server_domain}/recipes/search`, {
           params: {
@@ -123,10 +128,13 @@ export default {
             number: this.searchForm.num_of_results
           }
         });
+        this.updateSearchHistory();
+        this.isSearchPerformed = true;
         this.searchResultsRecipes = response.data;
         if (this.searchResultsRecipes.length > 0) {
-          window.sessionStorage.setItem('searchHistoryText', this.searchForm.text_to_search);
-          window.sessionStorage.setItem('searchHistoryRecipes', JSON.stringify(this.searchResultsRecipes));
+          this.updateSearchHistory();
+          this.currentSearchText = this.searchForm.text_to_search;
+          this.currentSearchResults = this.searchResultsRecipes;
         }
       } catch (err) {
         if (err.response) {
@@ -134,6 +142,14 @@ export default {
         } else {
           this.search_error = err.message || "Unknown error";
         }
+      }
+    },
+    updateSearchHistory() {
+      if (this.currentSearchText) {
+        window.sessionStorage.setItem('searchHistoryText', this.currentSearchText);
+        window.sessionStorage.setItem('searchHistoryRecipes', JSON.stringify(this.currentSearchResults));
+        this.previousSearchText = this.currentSearchText;
+        this.previousSearchResults = this.currentSearchResults;
       }
     },
     async reset() {
@@ -145,7 +161,16 @@ export default {
         num_of_results: "5"
       };
       this.search_error = undefined;
+    },
+    sortResultsByPreparationTime() {
+        this.searchResultsRecipes.sort((a, b) => a.ready_in_minutes - b.ready_in_minutes);
+    },
+    sortResultsByPopularity() {
+        this.searchResultsRecipes.sort((a, b) => b.aggregate_likes - a.aggregate_likes);
     }
+  },
+  beforeDestroy() {
+    this.updateSearchHistory();
   },
   computed: {
     searchable() {
@@ -154,12 +179,11 @@ export default {
         this.searchForm.selected_diets.length > 0 ||
         this.searchForm.selected_intolerances.length > 0;
     },
-    searchHistoryRecipes() {
-      const searchHistoryRecipes = window.sessionStorage.getItem('searchHistoryRecipes');
-      return searchHistoryRecipes ? JSON.parse(searchHistoryRecipes) : [];
-    },
     searchHistoryTitle() {
-      return `Your last search, "${window.sessionStorage.getItem('searchHistoryText')}"`;
+      return `Your last search, "${this.previousSearchText}":`;
+    },
+    searchHistoryRecipes() {
+      return this.previousSearchResults;
     },
     showResults() {
       return this.searchResultsRecipes.length > 0;
@@ -168,28 +192,46 @@ export default {
       let messageToReturn = `${this.searchResultsRecipes.length} recipe`;
       if (this.searchResultsRecipes.length > 1)
         messageToReturn += 's';
-      messageToReturn += ' found';
+      messageToReturn += ' found:';
       return messageToReturn;
+    },
+    searchContainerStyle() {
+      return this.isSearchPerformed ? {} : {
+          marginLeft: 'auto',
+          marginRight: 'auto',
+          display: 'block'
+      };
     }
   }
 };
 </script>
 <style lang="scss" scoped>
-.container {
-  // max-width: 500px;
-}
 .main-container {
   display: flex;
+  justify-content: center;
 }
 .search-container {
-  // margin-right: -20px;
-}
-.search-container, .results-container {
+  margin-left: 1.5%;
   width: 35%;
 }
+.results-container {
+  width: 60%;
+  margin-left: -3%;
+}
 .history-container {
-  margin-right: 50px;
+  margin-right: 1.5%;
+  margin-left: -2%;
+  max-width: 14%;
+}
+.sorting-buttons-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+.no-results-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 5%;
 }
 </style>
-
-
