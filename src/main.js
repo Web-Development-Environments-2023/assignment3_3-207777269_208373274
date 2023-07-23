@@ -5,16 +5,23 @@ import axios from "axios";
 
 import routes from "./routes";
 import VueRouter from "vue-router";
+import VueCookies from "vue-cookies";
+
 Vue.use(VueRouter);
 const router = new VueRouter({
   routes,
 });
+
+
+Vue.use(VueCookies);
+
 
 import Vuelidate from "vuelidate";
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
 import {
   FormGroupPlugin,
+  FormCheckboxPlugin,
   FormPlugin,
   FormInputPlugin,
   ButtonPlugin,
@@ -24,9 +31,15 @@ import {
   AlertPlugin,
   ToastPlugin,
   LayoutPlugin,
+  BootstrapVueIcons,
+  VBTooltipPlugin,
+  ListGroupPlugin,
+  ModalPlugin,
+  CarouselPlugin 
 } from "bootstrap-vue";
 [
   FormGroupPlugin,
+  FormCheckboxPlugin,
   FormPlugin,
   FormInputPlugin,
   ButtonPlugin,
@@ -36,6 +49,11 @@ import {
   AlertPlugin,
   ToastPlugin,
   LayoutPlugin,
+  BootstrapVueIcons,
+  VBTooltipPlugin,
+  ListGroupPlugin ,
+  ModalPlugin,
+  CarouselPlugin 
 ].forEach((x) => Vue.use(x));
 Vue.use(Vuelidate);
 
@@ -49,7 +67,7 @@ axios.interceptors.request.use(
     return Promise.reject(error);
   }
 );
-
+axios.defaults.withCredentials = true
 // Add a response interceptor
 axios.interceptors.response.use(
   function(response) {
@@ -67,6 +85,7 @@ Vue.use(VueAxios, axios);
 Vue.config.productionTip = false;
 
 const shared_data = {
+  server_domain: "https://schwartz-kravchik.cs.bgu.ac.il:443",
   username: localStorage.username,
   login(username) {
     localStorage.setItem("username", username);
@@ -79,7 +98,6 @@ const shared_data = {
     this.username = undefined;
   },
 };
-console.log(shared_data);
 // Vue.prototype.$root.store = shared_data;
 
 new Vue({

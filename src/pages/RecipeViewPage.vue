@@ -1,52 +1,22 @@
 <template>
-  <div class="container">
-    <div v-if="recipe">
-      <div class="recipe-header mt-3 mb-4">
-        <h1>{{ recipe.title }}</h1>
-        <img :src="recipe.image" class="center" />
-      </div>
-      <div class="recipe-body">
-        <div class="wrapper">
-          <div class="wrapped">
-            <div class="mb-3">
-              <div>Ready in {{ recipe.readyInMinutes }} minutes</div>
-              <div>Likes: {{ recipe.aggregateLikes }} likes</div>
-            </div>
-            Ingredients:
-            <ul>
-              <li
-                v-for="(r, index) in recipe.extendedIngredients"
-                :key="index + '_' + r.id"
-              >
-                {{ r.original }}
-              </li>
-            </ul>
-          </div>
-          <div class="wrapped">
-            Instructions:
-            <ol>
-              <li v-for="s in recipe._instructions" :key="s.number">
-                {{ s.step }}
-              </li>
-            </ol>
-          </div>
-        </div>
-      </div>
-      <!-- <pre>
-      {{ $route.params }}
-      {{ recipe }}
-    </pre
-      > -->
-    </div>
-  </div>
+  <RecipeViewComponent :recipe="recipe"></RecipeViewComponent>
 </template>
 
 <script>
+import RecipeViewComponent from '../components/RecipeViewComponent.vue';
 export default {
+  components:{
+    RecipeViewComponent
+  },
   data() {
     return {
       recipe: null
     };
+  },
+  computed: {
+    renderedRecipeSummary() {
+      return this.recipe.summary;
+    }
   },
   async created() {
     try {
@@ -54,33 +24,40 @@ export default {
       // response = this.$route.params.response;
 
       try {
+        this.axios.defaults.withCredentials = true;
         response = await this.axios.get(
-          // "https://test-for-3-2.herokuapp.com/recipes/info",
-          this.$root.store.server_domain + "/recipes/info",
+          this.$root.store.server_domain + "/recipes/" + this.$route.params.recipeId,
           {
-            params: { id: this.$route.params.recipeId }
+            withCredentials: true
           }
         );
 
-        // console.log("response.status", response.status);
         if (response.status !== 200) this.$router.replace("/NotFound");
       } catch (error) {
         console.log("error.response.status", error.response.status);
         this.$router.replace("/NotFound");
         return;
       }
+      this.axios.defaults.withCredentials = false;
 
       let {
-        analyzedInstructions,
+        analyzed_instructions,
         instructions,
-        extendedIngredients,
-        aggregateLikes,
-        readyInMinutes,
+        extended_ingredients,
+        aggregate_likes,
+        ready_in_minutes,
         image,
-        title
-      } = response.data.recipe;
+        title,
+        vegan,
+        vegetarian,
+        gluten_free,
+        portions,
+        is_seen,
+        is_favorite,
+        recipe_id
+      } = response.data;
 
-      let _instructions = analyzedInstructions
+      let _instructions = analyzed_instructions
         .map((fstep) => {
           fstep.steps[0].step = fstep.name + fstep.steps[0].step;
           return fstep.steps;
@@ -90,19 +67,26 @@ export default {
       let _recipe = {
         instructions,
         _instructions,
-        analyzedInstructions,
-        extendedIngredients,
-        aggregateLikes,
-        readyInMinutes,
+        analyzed_instructions,
+        extended_ingredients,
+        aggregate_likes,
+        ready_in_minutes,
         image,
-        title
+        title,
+        vegan,
+        vegetarian,
+        gluten_free,
+        portions,
+        is_seen,
+        is_favorite,
+        recipe_id
       };
 
       this.recipe = _recipe;
     } catch (error) {
       console.log(error);
     }
-  }
+  },
 };
 </script>
 
@@ -113,13 +97,75 @@ export default {
 .wrapped {
   width: 50%;
 }
-.center {
+.center { 
   display: block;
   margin-left: auto;
   margin-right: auto;
   width: 50%;
+}.icon {
+  width: 30px; /* Adjust the width as needed */
+  height: 30px; /* Adjust the height as needed */
 }
-/* .recipe-header{
+.transparent-button {
+  background-color: transparent;
+  border-color: transparent;
+  padding: 0;
+  color: black;
+}
 
-} */
+.transparent-button:hover {
+  background-color: transparent;
+  border-color: transparent;
+  padding: 0;
+  color: black;
+}
+
+.transparent-button:disabled {
+  background-color: transparent;
+  border-color: transparent;
+  padding: 0;
+  color: black;
+}
+.recipe-page-header{
+  max-height: 310px;
+  width: 100%;
+}
+
+.recipe-page-header>img {
+  max-height: 300px;
+  object-fit: cover;
+  object-position: center;
+}
+.recipe-info{
+  color:black;
+}
+
+.recipe-title{
+  font-family: "Frank Ruhl Libre",Georgia,serif;
+  text-align: center;
+}
+
+.header{
+  font-family: "Frank Ruhl Libre",Georgia,serif;
+}
+
+.recipe-body{
+  padding-top: 20px;
+}
+.homepage-image{
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  object-fit: cover;
+  width: 90%;
+  height: 500px;
+  margin-right: 5%;
+  margin-left: 5%;
+}
+
+.content-overlay{
+  background: white;
+  border-radius: 5px;
+  box-shadow: 0 4px 10px 4px rgba(213,213,232,.25);
+  position: relative;
+  margin-top: -160px;
+}
 </style>

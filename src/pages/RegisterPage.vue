@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h1 class="title">Register</h1>
+    <h1 class="title header">Register</h1>
     <b-form @submit.prevent="onRegister" @reset.prevent="onReset">
       <b-form-group
         id="input-group-username"
@@ -22,6 +22,40 @@
         </b-form-invalid-feedback>
         <b-form-invalid-feedback v-if="!$v.form.username.alpha">
           Username alpha
+        </b-form-invalid-feedback>
+      </b-form-group>
+
+      <b-form-group
+        id="input-group-first_name"
+        label-cols-sm="3"
+        label="First Name:"
+        label-for="first_name"
+      >
+        <b-form-input
+          id="first_name"
+          v-model="$v.form.first_name.$model"
+          type="text"
+          :state="validateState('first_name')"
+        ></b-form-input>
+        <b-form-invalid-feedback v-if="!$v.form.first_name.required">
+          First name is required
+        </b-form-invalid-feedback>
+      </b-form-group>
+
+      <b-form-group
+        id="input-group-last_name"
+        label-cols-sm="3"
+        label="Last Name:"
+        label-for="last_name"
+      >
+        <b-form-input
+          id="last_name"
+          v-model="$v.form.last_name.$model"
+          type="text"
+          :state="validateState('last_name')"
+        ></b-form-input>
+        <b-form-invalid-feedback v-if="!$v.form.last_name.required">
+          Last name is required
         </b-form-invalid-feedback>
       </b-form-group>
 
@@ -90,10 +124,10 @@
         </b-form-invalid-feedback>
       </b-form-group>
 
-      <b-button type="reset" variant="danger">Reset</b-button>
+      <b-button type="reset" variant="outline-dark">Reset</b-button>
       <b-button
         type="submit"
-        variant="primary"
+        variant="outline-primary"
         style="width:250px;"
         class="ml-5 w-75"
         >Register</b-button
@@ -136,8 +170,8 @@ export default {
     return {
       form: {
         username: "",
-        firstName: "",
-        lastName: "",
+        first_name: "",
+        last_name: "",
         country: null,
         password: "",
         confirmedPassword: "",
@@ -156,6 +190,12 @@ export default {
         length: (u) => minLength(3)(u) && maxLength(8)(u),
         alpha
       },
+      first_name: {
+        required
+      },
+      last_name: {
+        required
+      },
       country: {
         required
       },
@@ -170,9 +210,7 @@ export default {
     }
   },
   mounted() {
-    // console.log("mounted");
     this.countries.push(...countries);
-    // console.log($v);
   },
   methods: {
     validateState(param) {
@@ -181,36 +219,39 @@ export default {
     },
     async Register() {
       try {
+        this.axios.defaults.withCredentials = true;
         const response = await this.axios.post(
           // "https://test-for-3-2.herokuapp.com/user/Register",
           this.$root.store.server_domain + "/Register",
 
           {
             username: this.form.username,
+            first_name: this.form.first_name,
+            last_name: this.form.last_name,
+            country: this.form.country,
+            email: this.form.email,
             password: this.form.password
           }
         );
         this.$router.push("/login");
-        // console.log(response);
       } catch (err) {
         console.log(err.response);
         this.form.submitError = err.response.data.message;
       }
+      this.axios.defaults.withCredentials = false;
     },
     onRegister() {
-      // console.log("register method called");
       this.$v.form.$touch();
       if (this.$v.form.$anyError) {
         return;
       }
-      // console.log("register method go");
       this.Register();
     },
     onReset() {
       this.form = {
         username: "",
-        firstName: "",
-        lastName: "",
+        first_name: "",
+        last_name: "",
         country: null,
         password: "",
         confirmedPassword: "",
@@ -226,5 +267,12 @@ export default {
 <style lang="scss" scoped>
 .container {
   max-width: 500px;
+}
+
+.title{
+  padding-top: 35px;
+  padding-bottom: 35px;
+  text-align: center;
+  // font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 </style>

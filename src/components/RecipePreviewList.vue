@@ -1,15 +1,17 @@
 <template>
-  <b-container>
-    <h3>
-      {{ title }}:
+  <div :class="{ 'flex-center': true, 'card-group-column': isColumn }">
+    <h3 class="header">
+      {{ title }}
       <slot></slot>
     </h3>
-    <b-row>
-      <b-col v-for="r in recipes" :key="r.id">
-        <RecipePreview class="recipePreview" :recipe="r" />
-      </b-col>
-    </b-row>
-  </b-container>
+    <b-card-group class="flex-center">
+      <div v-for="r in recipes" :key="r.id">
+        <RecipePreview class="recipePreview" :width="width" :height="height" :recipe="r" :route_name="route_name"/>
+      </div>
+    </b-card-group>
+ 
+
+    </div>
 </template>
 
 <script>
@@ -23,39 +25,42 @@ export default {
     title: {
       type: String,
       required: true
+    },
+    recipes: {
+      type: Array,
+      required: true
+    },
+    route_name: {
+      type: String
+    },
+    width: {
+      type: String,
+      default: "400px"
+    },
+    height: {
+      type: String,
+      default: "380px"
+    },
+    isColumn:{
+      type: Boolean,
+      default: false
     }
-  },
-  data() {
-    return {
-      recipes: []
-    };
   },
   mounted() {
-    this.updateRecipes();
+    // this.updateRecipes();
   },
-  methods: {
-    async updateRecipes() {
-      try {
-        const response = await this.axios.get(
-          this.$root.store.server_domain + "/recipes/random",
-          // "https://test-for-3-2.herokuapp.com/recipes/random"
-        );
 
-        // console.log(response);
-        const recipes = response.data.recipes;
-        this.recipes = [];
-        this.recipes.push(...recipes);
-        // console.log(this.recipes);
-      } catch (error) {
-        console.log(error);
-      }
-    }
-  }
 };
 </script>
 
 <style lang="scss" scoped>
 .container {
   min-height: 400px;
+}
+.recipePreview{
+  padding: 0px 10px 10px 0px;
+}
+.card-group-column{
+  flex-flow: column wrap;
 }
 </style>
